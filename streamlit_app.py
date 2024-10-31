@@ -13,13 +13,19 @@ classification.""")
 st.markdown("##### Dataset used: [Kaggle](https://www.kaggle.com/competitions/malware-detection/data)")
 st.subheader("Try yourself:-")
 
+# Ensure 'malwares' directory exists
+if not os.path.exists('malwares'):
+    os.makedirs('malwares')
+
 file = st.file_uploader("Upload a file to check for malwares:", accept_multiple_files=True)
-if len(file):
+if file:
     with st.spinner("Checking..."):
         for i in file:
-            open('malwares/tempFile', 'wb').write(i.getvalue())
-            legitimate = checkFile("malwares/tempFile")
-            os.remove("malwares/tempFile")
+            temp_path = 'malwares/tempFile'
+            with open(temp_path, 'wb') as f:
+                f.write(i.getvalue())
+            legitimate = checkFile(temp_path)
+            os.remove(temp_path)
             if legitimate:
                 st.write(f"File {i.name} seems *LEGITIMATE*!")
             else:
